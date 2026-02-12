@@ -1,0 +1,8 @@
+{
+  "name": "Altrex Prime Portfolio",
+  "description": "A premium, modern portfolio website for Altrex Prime, featuring integrated facilities management and elite security solutions with a sleek red, orange, and black aesthetic.",
+  "requestFramePermissions": [
+    "camera",
+    "microphone"
+  ]
+}
