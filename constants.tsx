@@ -8,6 +8,52 @@ export const COLORS = {
   dark: '#0a0a0a',
   gray: '#1f2937'
 };
+export interface GalleryImage {
+  url: string;
+  title: string;
+  tag: string;
+  location: string;
+}
+
+export const GALLERY_IMAGES: GalleryImage[] = [
+  {
+    url: "Images/7.jpeg",
+    title: "Elite SIRA Security Deployment",
+    tag: "Security",
+    location: "Dubai"
+  },
+  {
+    url: "Images/9.jpeg",
+    title: "Technical HVAC Calibration",
+    tag: "Facilities",
+    location: "Downtown Dubai"
+  },
+  {
+    url: "https://images.unsplash.com/photo-1504384308090-c894fdcc538d?auto=format&fit=crop&q=80&w=800",
+    title: "Network Infrastructure Ops",
+    tag: "Technical",
+    location: "Al Qasis HQ"
+  },
+  {
+    url: "https://images.unsplash.com/photo-1517048676732-d65bc937f952?auto=format&fit=crop&q=80&w=800",
+    title: "Strategic Briefing Room",
+    tag: "Corporate",
+    location: "Sajaya 01"
+  },
+  {
+    url: "Images/Gemini_Generated_Image_63wjw63wjw63wjw6.png",
+    title: "Our Professional Team is here for you",
+    tag: "Team",
+    location: "Dubai"
+  },
+  {
+    url: "Images/2.jpeg",
+    title: "Facility Soft Services",
+    tag: "Maintenance",
+    location: "Business Bay"
+  }
+];
+
 
 export const SERVICES = [
   {

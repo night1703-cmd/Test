@@ -2,6 +2,51 @@ import React, { useEffect, useMemo, useState, memo, useRef } from 'react';
 import { ArrowRight, ShieldCheck, Zap, Cpu } from 'lucide-react';
 import { motion, useInView } from 'framer-motion';
 
+/* ---------------- SHOOTING LINES / STARS ---------------- */
+const ShootingStars = memo(() => {
+    // Generate 20 random lines with different positions and speeds
+    const stars = useMemo(() => Array.from({ length: 20 }).map((_, i) => ({
+        id: i,
+        top: Math.random() * 100,
+        left: Math.random() * 100,
+        delay: Math.random() * 8,
+        duration: Math.random() * 2 + 1.5,
+        width: Math.random() * 150 + 50, // Length of the "tail"
+    })), []);
+
+    return (
+        <div className="absolute inset-0 pointer-events-none overflow-hidden">
+            {stars.map((star) => (
+                <div
+                    key={star.id}
+                    className="star-line absolute bg-gradient-to-r from-transparent via-red-500/40 to-white/80"
+                    style={{
+                        top: `${star.top}%`,
+                        left: `${star.left}%`,
+                        width: `${star.width}px`,
+                        height: '1px',
+                        animationDelay: `${star.delay}s`,
+                        animationDuration: `${star.duration}s`,
+                    }}
+                />
+            ))}
+            <style>{`
+                .star-line {
+                    transform: rotate(-45deg) translateX(200%);
+                    opacity: 0;
+                    animation: shoot linear infinite;
+                }
+                @keyframes shoot {
+                    0% { transform: rotate(-45deg) translateX(200%); opacity: 0; }
+                    5% { opacity: 1; }
+                    95% { opacity: 1; }
+                    100% { transform: rotate(-45deg) translateX(-1500%); opacity: 0; }
+                }
+            `}</style>
+        </div>
+    );
+});
+
 /* ---------------- TACTICAL PARTICLES ---------------- */
 const ParticleField = memo(({ mouse }: any) => {
     const shards = useMemo(() => Array.from({ length: 24 }).map((_, i) => ({
@@ -38,8 +83,8 @@ const Hero: React.FC<{ isDark: boolean }> = ({ isDark }) => {
 
     useEffect(() => {
         const handleMove = (e: MouseEvent | TouchEvent) => {
-            const x = 'touches' in e ? e.touches[0].clientX : e.clientX;
-            const y = 'touches' in e ? e.touches[0].clientY : e.clientY;
+            const x = 'touches' in e ? (e as TouchEvent).touches[0].clientX : (e as MouseEvent).clientX;
+            const y = 'touches' in e ? (e as TouchEvent).touches[0].clientY : (e as MouseEvent).clientY;
             setMouse({
                 x: (x / window.innerWidth - 0.5),
                 y: (y / window.innerHeight - 0.5),
@@ -57,6 +102,7 @@ const Hero: React.FC<{ isDark: boolean }> = ({ isDark }) => {
         <section className="relative min-h-screen flex items-center overflow-hidden pt-32 pb-20 bg-white dark:bg-[#050505] transition-colors duration-1000">
             {/* Ambient Background Elements */}
             <div className="absolute inset-0 z-0">
+                <ShootingStars />
                 <ParticleField mouse={mouse} />
                 <div className="absolute top-1/4 -left-40 w-[500px] h-[500px] bg-red-600/10 dark:bg-red-600/20 blur-[120px] rounded-full animate-pulse" />
                 <div className="absolute bottom-1/4 -right-40 w-[400px] h-[400px] bg-orange-600/5 dark:bg-orange-600/10 blur-[100px] rounded-full" />

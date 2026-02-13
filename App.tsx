@@ -7,6 +7,7 @@ import About from './components/About';
 import FAQ from './components/FAQ';
 import Contact from './components/Contact';
 import Footer from './components/Footer';
+import Gallery from './components/Gallery';
 import AIAssistant from './components/AIAssistant';
 import Testimonials from "@/components/Testimonials.tsx";
 
@@ -108,6 +109,7 @@ const App: React.FC = () => {
             <Hero isDark={isDark} />
             <About isDark={isDark} />
             <Services isDark={isDark} />
+              <Gallery />
             <FAQ isDark={isDark} />
             <Contact isDark={isDark} />
           </main>

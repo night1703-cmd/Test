@@ -1,11 +1,10 @@
-import React, { useEffect, useState } from 'react'
+import React, { useState } from 'react'
 import { VALUES, STRATEGIC_PRINCIPLES } from '../constants'
 import {
     Target,
     Eye,
     ShieldCheck,
     ArrowUpRight,
-    Activity,
     Terminal,
     Globe,
     Lock
@@ -17,62 +16,87 @@ interface AboutProps {
 }
 
 const About: React.FC<AboutProps> = ({ isDark }) => {
-    const [scrollY, setScrollY] = useState(0)
     const [activeModule, setActiveModule] = useState<number | null>(null)
+    const [spinningIcons, setSpinningIcons] = useState<Record<string, boolean>>({})
 
-    useEffect(() => {
-        let ticking = false
-        const handleScroll = () => {
-            if (!ticking) {
-                window.requestAnimationFrame(() => {
-                    setScrollY(window.scrollY)
-                    ticking = false
-                })
-                ticking = true
-            }
-        }
-        window.addEventListener('scroll', handleScroll)
-        return () => window.removeEventListener('scroll', handleScroll)
-    }, [])
+    const triggerIconSpin = (id: string) => {
+        if (spinningIcons[id]) return;
+        setSpinningIcons(prev => ({ ...prev, [id]: true }))
+        setTimeout(() => {
+            setSpinningIcons(prev => ({ ...prev, [id]: false }))
+        }, 700)
+    }
 
     return (
         <section
             id="about"
             className="py-24 sm:py-32 transition-colors duration-500 bg-white dark:bg-[#080808] relative overflow-hidden"
         >
-            {/* ===================== KINETIC ATMOSPHERE ===================== */}
-            <div className="absolute inset-0 z-0 pointer-events-none">
+            {/* Optimized Animations */}
+            <style>{`
+                @keyframes icon-360 {
+                    from { transform: rotate(0deg); }
+                    to { transform: rotate(360deg); }
+                }
+                .animate-spin-360 {
+                    animation: icon-360 0.7s cubic-bezier(0.4, 0, 0.2, 1);
+                }
+                
+                @keyframes independent-fall {
+                    0% { transform: translateY(-300px); }
+                    100% { transform: translateY(1200px); }
+                }
+
+                .kinetic-line {
+                    will-change: transform;
+                    animation: independent-fall var(--duration) linear infinite;
+                }
+            `}</style>
+
+            {/* ===================== MESMERIZING BACKGROUND ===================== */}
+            <div className="absolute inset-0 z-0 pointer-events-none overflow-hidden">
+
+                {/* 1. Very Faint Tech Grid */}
                 <div
-                    className="absolute inset-0 animate-grid-pulse opacity-[0.02] dark:opacity-[0.04]"
+                    className="absolute inset-0 opacity-[0.02] dark:opacity-[0.04]"
                     style={{
-                        backgroundImage: `linear-gradient(${isDark ? 'rgba(220,38,38,0.2)' : 'rgba(220,38,38,0.1)'} 1px, transparent 1px),
-                              linear-gradient(90deg, ${isDark ? 'rgba(220,38,38,0.2)' : 'rgba(220,38,38,0.1)'} 1px, transparent 1px)`,
+                        backgroundImage: `linear-gradient(${isDark ? '#dc2626' : '#94a3b8'} 1px, transparent 1px),
+                                          linear-gradient(90deg, ${isDark ? '#dc2626' : '#94a3b8'} 1px, transparent 1px)`,
                         backgroundSize: '100px 100px',
-                        transform: `translateY(${scrollY * 0.08}px)`
                     }}
                 />
-                <div className="absolute top-1/4 -left-40 w-[600px] h-[600px] bg-red-600/5 dark:bg-red-600/10 blur-[160px] rounded-full animate-float-orb"></div>
-                <div
-                    className="absolute bottom-1/4 -right-40 w-[500px] h-[500px] bg-orange-600/5 dark:bg-orange-600/10 blur-[140px] rounded-full animate-float-orb"
-                    style={{ animationDelay: '-12s' }}
-                ></div>
+
+                {/* 2. Independent Kinetic Streams */}
+                <div className="absolute inset-0 flex justify-around">
+                    {[...Array(12)].map((_, i) => (
+                        <div
+                            key={i}
+                            className="kinetic-line w-[1.5px] bg-gradient-to-b from-transparent via-red-500/50 to-transparent"
+                            style={{
+                                height: '200px',
+                                '--duration': `${5 + (i % 3)}s`,
+                                animationDelay: `${i * 0.8}s`,
+                            } as React.CSSProperties}
+                        />
+                    ))}
+                </div>
+
+                {/* 3. Static Ambient Glows */}
+                <div className="absolute top-[20%] left-[-10%] w-[400px] h-[400px] bg-red-600/5 dark:bg-red-600/10 blur-[120px] rounded-full" />
+                <div className="absolute bottom-[20%] right-[-10%] w-[400px] h-[400px] bg-orange-600/5 dark:bg-orange-600/10 blur-[120px] rounded-full" />
             </div>
 
             <div className="max-w-7xl mx-auto px-6 sm:px-8 lg:px-10 relative z-10">
-
-                {/* ===================== VISION & MISSION ===================== */}
+                {/* Vision & Mission Section */}
                 <div className="grid lg:grid-cols-2 gap-16 lg:gap-24 items-center mb-40">
-
                     <div className="animate-in fade-in slide-in-from-bottom-12 duration-1000">
                         <div className="inline-flex items-center gap-3 px-4 py-1.5 rounded-full bg-red-600/10 border border-red-600/20 mb-8">
                             <span className="w-2 h-2 rounded-full bg-red-500 animate-pulse"></span>
-                            {/* Typo Fix: Better tracking for small caps */}
                             <span className="text-[10px] font-black uppercase tracking-[0.5em] text-red-600 dark:text-red-500">
                                 Global Directive
                             </span>
                         </div>
 
-                        {/* Typo Fix: Fluid sizing and refined leading */}
                         <h2 className="font-black mb-10 dark:text-white text-slate-900 uppercase tracking-tighter leading-[1] md:leading-[0.9]
                             text-4xl sm:text-6xl lg:text-7xl xl:text-8xl">
                             OUR <span className="gradient-text">VISION</span><br />
@@ -86,9 +110,10 @@ const About: React.FC<AboutProps> = ({ isDark }) => {
 
                         <div className="grid sm:grid-cols-2 gap-10">
                             {/* Vision */}
-                            <div className="group space-y-4">
-                                <div className="w-16 h-16 bg-slate-100 dark:bg-white/5 border border-slate-200 dark:border-white/10 rounded-[1.5rem] flex items-center justify-center
-                                    group-hover:bg-orange-600 transition-all duration-700 group-hover:scale-110 group-hover:shadow-[0_0_30px_rgba(249,115,22,0.3)]">
+                            <div className="group space-y-4 cursor-pointer" onClick={() => triggerIconSpin('vision')}>
+                                <div className={`w-16 h-16 bg-slate-100 dark:bg-white/5 border border-slate-200 dark:border-white/10 rounded-[1.5rem] flex items-center justify-center
+                                    group-hover:bg-orange-600 transition-all duration-700 group-hover:scale-110 group-hover:shadow-[0_0_30px_rgba(249,115,22,0.3)]
+                                    ${spinningIcons['vision'] ? 'animate-spin-360' : ''}`}>
                                     <Eye className="text-orange-500 group-hover:text-white transition-colors" />
                                 </div>
                                 <h4 className="text-2xl font-black dark:text-white text-slate-900 uppercase tracking-tight">
@@ -100,9 +125,10 @@ const About: React.FC<AboutProps> = ({ isDark }) => {
                             </div>
 
                             {/* Mission */}
-                            <div className="group space-y-4">
-                                <div className="w-16 h-16 bg-slate-100 dark:bg-white/5 border border-slate-200 dark:border-white/10 rounded-[1.5rem] flex items-center justify-center
-                                    group-hover:bg-red-600 transition-all duration-700 group-hover:scale-110 group-hover:shadow-[0_0_30px_rgba(220,38,38,0.3)]">
+                            <div className="group space-y-4 cursor-pointer" onClick={() => triggerIconSpin('mission')}>
+                                <div className={`w-16 h-16 bg-slate-100 dark:bg-white/5 border border-slate-200 dark:border-white/10 rounded-[1.5rem] flex items-center justify-center
+                                    group-hover:bg-red-600 transition-all duration-700 group-hover:scale-110 group-hover:shadow-[0_0_30px_rgba(220,38,38,0.3)]
+                                    ${spinningIcons['mission'] ? 'animate-spin-360' : ''}`}>
                                     <Target className="text-red-500 group-hover:text-white transition-colors" />
                                 </div>
                                 <h4 className="text-2xl font-black dark:text-white text-slate-900 uppercase tracking-tight">
@@ -122,13 +148,15 @@ const About: React.FC<AboutProps> = ({ isDark }) => {
                             {VALUES.map((value, idx) => (
                                 <div
                                     key={idx}
+                                    onClick={() => triggerIconSpin(`val-${idx}`)}
                                     className="p-8 lg:p-10 rounded-[2.5rem]
                                         bg-white dark:bg-white/[0.03]
                                         border border-slate-200 dark:border-white/10
                                         hover:border-orange-500 transition-all duration-700
-                                        group backdrop-blur-xl shadow-2xl hover:-translate-y-2"
+                                        group backdrop-blur-xl shadow-2xl hover:-translate-y-2 cursor-pointer"
                                 >
-                                    <div className="mb-6 group-hover:scale-110 transition-transform duration-700 text-orange-600 dark:text-orange-500">
+                                    <div className={`mb-6 group-hover:scale-110 transition-all duration-700 text-orange-600 dark:text-orange-500
+                                        ${spinningIcons[`val-${idx}`] ? 'animate-spin-360' : ''}`}>
                                         {value.icon}
                                     </div>
                                     <h4 className="text-lg font-black mb-2 dark:text-white text-slate-900 uppercase tracking-tight">
@@ -141,10 +169,13 @@ const About: React.FC<AboutProps> = ({ isDark }) => {
                             ))}
 
                             {/* Dual License Card */}
-                            <div className="p-8 lg:p-10 rounded-[2.5rem]
+                            <div
+                                onClick={() => triggerIconSpin('license')}
+                                className="p-8 lg:p-10 rounded-[2.5rem]
                                 bg-gradient-primary flex flex-col justify-end min-h-[240px]
-                                transition-all duration-700 hover:-translate-y-2 shadow-2xl shadow-red-900/40 relative overflow-hidden group">
-                                <div className="absolute top-0 right-0 p-8 opacity-20 group-hover:scale-150 transition-transform duration-1000">
+                                transition-all duration-700 hover:-translate-y-2 shadow-2xl shadow-red-900/40 relative overflow-hidden group cursor-pointer">
+                                <div className={`absolute top-0 right-0 p-8 opacity-20 group-hover:scale-150 transition-all duration-700
+                                    ${spinningIcons['license'] ? 'animate-spin-360' : ''}`}>
                                     <ShieldCheck className="w-20 h-20 text-white" />
                                 </div>
                                 <div className="relative z-10">
@@ -160,7 +191,7 @@ const About: React.FC<AboutProps> = ({ isDark }) => {
                     </div>
                 </div>
 
-                {/* ===================== STRATEGIC DNA ===================== */}
+                {/* STRATEGIC DNA Section */}
                 <div id="principles" className="mt-20">
                     <div className="mb-24">
                         <div className="inline-flex items-center gap-3 px-4 py-1.5 rounded-full bg-slate-900 text-white border border-white/10 mb-8">
@@ -186,7 +217,10 @@ const About: React.FC<AboutProps> = ({ isDark }) => {
                                 key={idx}
                                 onMouseEnter={() => setActiveModule(idx)}
                                 onMouseLeave={() => setActiveModule(null)}
-                                onClick={() => setActiveModule(activeModule === idx ? null : idx)}
+                                onClick={() => {
+                                    setActiveModule(activeModule === idx ? null : idx);
+                                    triggerIconSpin(`principle-${idx}`);
+                                }}
                                 className={`relative group min-h-[420px] rounded-[3rem] lg:rounded-[3.5rem]
                                     p-8 lg:p-12 transition-all duration-700 border cursor-pointer
                                     ${activeModule !== null && activeModule !== idx ? 'opacity-30 blur-[4px] scale-[0.98]' : 'opacity-100 scale-100'}
@@ -196,7 +230,8 @@ const About: React.FC<AboutProps> = ({ isDark }) => {
                                 <div className="relative z-10 flex flex-col h-full justify-between">
                                     <div className="space-y-8">
                                         <div className="flex justify-between items-start">
-                                            <div className="w-16 h-16 rounded-[1.25rem] flex items-center justify-center bg-orange-600/10 text-orange-600 group-hover:bg-orange-600 group-hover:text-white transition-all duration-700">
+                                            <div className={`w-16 h-16 rounded-[1.25rem] flex items-center justify-center bg-orange-600/10 text-orange-600 group-hover:bg-orange-600 group-hover:text-white transition-all duration-700
+                                                ${spinningIcons[`principle-${idx}`] ? 'animate-spin-360' : ''}`}>
                                                 {principle.icon}
                                             </div>
                                             <div className="text-xs font-black font-mono dark:text-zinc-500 text-slate-400 tracking-widest">
