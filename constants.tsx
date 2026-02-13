@@ -17,13 +17,13 @@ export interface GalleryImage {
 
 export const GALLERY_IMAGES: GalleryImage[] = [
   {
-    url: "Images/7.jpeg",
+    url: "./Images/7.jpeg",
     title: "Elite SIRA Security Deployment",
     tag: "Security",
     location: "Dubai"
   },
   {
-    url: "Images/9.jpeg",
+    url: "./Images/9.jpeg",
     title: "Technical HVAC Calibration",
     tag: "Facilities",
     location: "Downtown Dubai"
@@ -41,13 +41,13 @@ export const GALLERY_IMAGES: GalleryImage[] = [
     location: "Sajaya 01"
   },
   {
-    url: "Images/Gemini_Generated_Image_63wjw63wjw63wjw6.png",
+    url: "./Images/Gemini_Generated_Image_63wjw63wjw63wjw6.png",
     title: "Our Professional Team is here for you",
     tag: "Team",
     location: "Dubai"
   },
   {
-    url: "Images/2.jpeg",
+    url: "./Images/2.jpeg",
     title: "Facility Soft Services",
     tag: "Maintenance",
     location: "Business Bay"
